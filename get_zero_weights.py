@@ -1,20 +1,11 @@
 #!/usr/bin/env python
-# get_zero_weights, last mod. 23/09/14
-#                             03/11/14
-#                             07/11/14
-#                             13/01/15
 
-##################################################
-# Get the number of subint-channels with zero
-# weigths (i.e. cleaned) from TimerArchive file.
-#
-# Written by Maciej Serylak
-##################################################
-
-# TO DO:
-# import weights from archive and write them to file
-# set weights using user input or file - 
-# get zero weigths and write them to psrsh file - DONE
+# Copyright (C) 2015 by Maciej Serylak
+# Licensed under the Academic Free License version 3.0
+# This program comes with ABSOLUTELY NO WARRANTY.
+# You are free to modify and redistribute this code as long
+# as you do not remove the above attribution and reasonably
+# inform receipients that you have modified the original work.
 
 import math
 import numpy as np
@@ -23,9 +14,7 @@ from optparse import OptionParser
 
 np.set_printoptions(threshold='nan') # print entire lists/arrays without truncation
 
-############################################
 # Initialise parameters.
-############################################
 parser = OptionParser(usage="%prog <options>", description="Get the number of subint-channels with zero weigths (i.e. cleaned) from TimerArchive/PSRFITS file.")
 parser.formatter.max_help_position = 50 # increase space reserved for option flags (default 24), trick to make the help more readable
 parser.formatter.width=200 # increase help width from 120 to 200
@@ -33,10 +22,6 @@ parser.add_option("-v", "--verbose", dest="verbose", action="store_true", help="
 parser.add_option("-p", "--psrsh", dest="psrsh", action="store_true", help="Write commands to psrsh script file.")
 parser.add_option("-f", "--file", type="string", dest="file", default="B1508+55_L236566_SAP0_BEAM0.ar.cg", help="State the name of the file to be analysed, e.g. --file \"fileparam\"")
 parser.add_option("-w", "--weight", type="string", dest="weight", )
-
-
-
-
 
 (options, args) = parser.parse_args()
 file = options.file # get the file
