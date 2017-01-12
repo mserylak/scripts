@@ -5,7 +5,7 @@
 # This program comes with ABSOLUTELY NO WARRANTY.
 # You are free to modify and redistribute this code as long
 # as you do not remove the above attribution and reasonably
-# inform receipients that you have modified the original work.
+# inform recipients that you have modified the original work.
 
 import numpy as np
 import h5py
