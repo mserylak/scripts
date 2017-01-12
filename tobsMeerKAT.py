@@ -99,7 +99,7 @@ if __name__=="__main__":
       print "\nNo S1400 available in psrcat. Will assume S1400 = %.f mJy.\n" % S1400
     elif psrS1400 != "*" and not resultS1400:
       psrS1400 = float(psrS1400)
-      print "\nS1400 returned by psrcat is %.2f\n" % psrAlpha
+      print "\nS1400 returned by psrcat is %.2f\n" % psrS1400
     # If --s1400 option was specified use it instead of psrcat value.
     elif resultS1400:
       psrS1400 = S1400
