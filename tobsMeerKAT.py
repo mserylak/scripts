@@ -13,14 +13,14 @@ import subprocess
 import sys
 import numpy as np
 
-__version__ = 1.1
+__version__ = "1.2"
 
 # Main body of the script.
 if __name__=="__main__":
   # Parsing the command line options.
   parser = argparse.ArgumentParser(prog = "tobsMeerKAT.py",
                                    usage = "%(prog)s [options]",
-                                   description = "Calculate sensitivity for MeerKAT. Version %.1f" % __version__,
+                                   description = "Calculate sensitivity for MeerKAT. Version %sq" % __version__,
                                    formatter_class = lambda prog: argparse.HelpFormatter(prog, max_help_position=100, width = 250),
                                    epilog = "Copyright (C) 2017 by Maciej Serylak")
   parser.add_argument("--npol",  type = int,   dest = "nPol",  metavar = "<nPol>",  default = "2" ,      help = "number of polarisations, (default: 2)")
