@@ -28,7 +28,7 @@ if __name__=="__main__":
   parser.add_argument("--sefd",  type = float, dest = "SEFD",  metavar = "<SEFD>",  default = "456" ,    help = "system equivalent flux density for individual antenna, (default: 456 Jy)")
   parser.add_argument("--nant",  type = int,   dest = "nAnt",  metavar = "<nAnt>",  default = "16",      help = "number of antennas used in observation, (default: 16)")
   parser.add_argument("--snr",   type = float, dest = "SNR",   metavar = "<SNR>",   default = "100.0",   help = "desired signal-to-noise ratio, (default: 100)")
-  parser.add_argument("--p0",    type = float, dest = "p0",    metavar = "<P0>",    default = "1.0",     help = "pulsar period, (default: 1.0 s)")
+  parser.add_argument("--p0",    type = float, dest = "p0",    metavar = "<P0>",    default = None,      help = "pulsar period, (default: 1.0 s)")
   parser.add_argument("--w50",   type = float, dest = "w50",   metavar = "<w50>",   default = None,      help = "width of pulse, (default: 0.05 * P0)")
   parser.add_argument("--s1400", type = float, dest = "S1400", metavar = "<S1400>", default = "10",      help = "minimal detectable flux at 1400 MHz, (default: 10 mJy)")
   parser.add_argument("--alpha", type = float, dest = "alpha", metavar = "<alpha>", default = "-1.6",    help = "spectral index, (default: -1.6)")
@@ -66,8 +66,15 @@ if __name__=="__main__":
       sys.exit(1)
     print "\nPulsar name provided. Unless specified, overriding --w50, --p0, --s1400 and --alpha with values from psrcat.\n"
     psrJName = stdoutdata.split()[1]
-    psrPeriod = float(stdoutdata.split()[2])
-    # Checking if psrW50, psrS1400 and psrAlpha have numerical representation as psrcat inserts "*".
+    # Checking if psrPeriod, psrW50, psrS1400 and psrAlpha have numerical representation as psrcat inserts "*".
+    psrPeriod = stdoutdata.split()[2]
+    resultP0 = any("--p0" in option for option in sys.argv)
+    if psrPeriod == "*" and not resultP0:
+      print "\nNo P0 available in psrcat and no P0 provided. Exiting script.\n"
+      sys.exit(1)
+    elif psrPeriod == "*" and resultP0:
+      psrPeriod = p0
+      print "\nNo P0 available in psrcat. Provided P0 is %.5f s.\n" % psrPeriod
     psrW50 = stdoutdata.split()[3]
     resultW50 = any("--w50" in option for option in sys.argv)
     if psrW50 == "*":
