@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 
 # Copyright (C) 2017 by Maciej Serylak
@@ -104,7 +105,7 @@ if __name__=="__main__":
     elif resultS1400:
       psrS1400 = S1400
       print "\nProvided S1400 is %.2f\n" % psrS1400
-    # Now will calculate tmin according to Weltevrede et al. 2006, A&A, 445, 243W.
+    # Now will calculate tmin according to Weltevrede et al. 2006, A&A, 445, 243.
     tmin = ((SNR*SNR*SEFDn*SEFDn)/(nPol*BW*(psrS1400*psrS1400)))*(psrW50/(psrPeriod-psrW50))
     if tmin < psrPeriod:
       print "\nUsing %d antennas will result in detection of single pulses from pulsar %s.\n" % (nAnt, psrJName)
@@ -116,7 +117,7 @@ if __name__=="__main__":
       w50 = args.w50
     else:
       w50 = p0 * 0.05
-    # Now will calculate tmin according to Weltevrede et al. 2006, A&A, 445, 243W.
+    # Now will calculate tmin according to Weltevrede et al. 2006, A&A, 445, 243.
     tmin = ((SNR*SNR*SEFDn*SEFDn)/(nPol*BW*(S1400*S1400)))*(w50/(p0-w50))
     if tmin < p0:
       print "\nUsing %d antennas will result in detection of single pulses from the source of interest.\n" % (nAnt)
