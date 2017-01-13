@@ -19,7 +19,7 @@ if __name__=="__main__":
   # Parsing the command line options.
   parser = argparse.ArgumentParser(prog = "tobsMeerKAT.py",
                                    usage = "%(prog)s [options]",
-                                   description = "Calculate sensitivity for MeerKAT. Version %sq" % __version__,
+                                   description = "Calculate minimal observing time of a pulsar for MeerKAT. Version %s" % __version__,
                                    formatter_class = lambda prog: argparse.HelpFormatter(prog, max_help_position=100, width = 250),
                                    epilog = "Copyright (C) 2017 by Maciej Serylak")
   parser.add_argument("--npol",  type = int,   dest = "nPol",  metavar = "<nPol>",  default = "2" ,      help = "number of polarisations, (default: 2)")
