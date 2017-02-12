@@ -28,31 +28,35 @@ prepare_commands()
    #echo ${pos_rad[@]}
    if [ ${antennas} = "LBA" ] ; then # prepare beamctl commands for LBA observations
       echo ''
-      echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:60 --subbands=${startsubband}:$((startsubband+60)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=61:121 --subbands=$((startsubband+61)):$((startsubband+121)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=122:182 --subbands=$((startsubband+122)):$((startsubband+182)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=183:243 --subbands=$((startsubband+183)):$((startsubband+243)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:243 --subbands=${startsubband}:$((startsubband+243)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:60 --subbands=${startsubband}:$((startsubband+60)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=61:121 --subbands=$((startsubband+61)):$((startsubband+121)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=122:182 --subbands=$((startsubband+122)):$((startsubband+182)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=183:243 --subbands=$((startsubband+183)):$((startsubband+243)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
       echo ''
    elif [ ${antennas} = "HBA" ] ; then # prepare beamctl commands for HBA observations
       echo ''
-      echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:60 --subbands=${startsubband}:$((startsubband+60)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=61:121 --subbands=$((startsubband+61)):$((startsubband+121)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=122:182 --subbands=$((startsubband+122)):$((startsubband+182)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=183:243 --subbands=$((startsubband+183)):$((startsubband+243)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:243 --subbands=${startsubband}:$((startsubband+243)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:60 --subbands=${startsubband}:$((startsubband+60)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=61:121 --subbands=$((startsubband+61)):$((startsubband+121)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=122:182 --subbands=$((startsubband+122)):$((startsubband+182)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=183:243 --subbands=$((startsubband+183)):$((startsubband+243)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
       echo ''
    elif [ ${antennas} = "LBA8" ] ; then # prepare beamctl commands for LBA observations
       echo ''
-      echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:121 --subbands=12:133 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=122:243 --subbands=134:255 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=244:365 --subbands=256:377 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=366:487 --subbands=378:499 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:487 --subbands=12:499 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:121 --subbands=12:133 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=122:243 --subbands=134:255 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=244:365 --subbands=256:377 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=366:487 --subbands=378:499 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
       echo ''
    elif [ ${antennas} = "HBA8" ] ; then # prepare beamctl commands for 8 bit mode HBA observations
       echo ''
-      echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:121 --subbands=12:133 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=122:243 --subbands=134:255 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=244:365 --subbands=256:377 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
-      echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=366:487 --subbands=378:499 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:487 --subbands=12:499 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:121 --subbands=12:133 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=122:243 --subbands=134:255 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=244:365 --subbands=256:377 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
+      #echo "/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=366:487 --subbands=378:499 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &"
       echo ''
    fi
 }
