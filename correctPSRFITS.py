@@ -10,7 +10,7 @@
 import sys
 import argparse
 import time
-import pyfits
+import astropy.io.fits as pyfits
 from astropy.time import Time
 
 __version__ = 1.0
