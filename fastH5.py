@@ -26,7 +26,7 @@ from numba import jit
 def _write_string(key, value):
   return "".join([struct.pack("I", len(key)), key, struct.pack("I", len(value)), value])
 
-def _write_int(key, value):
+def _write_int(key, value):fastH5.py_1
   return "".join([struct.pack("I",len(key)), key, struct.pack("I", value)])
 
 def _write_double(key, value):
