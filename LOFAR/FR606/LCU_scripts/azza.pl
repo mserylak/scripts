@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #
 # script calculates the azimuth and zenith angle (elevation)
 # of the source with pointed RA and DEC for pointed time
@@ -33,9 +33,13 @@ $phiFR606=47.3755242919458; # FR606
 $phiSE607=57.3987574589978; # SE607
 $phiUK608=51.1435426553869; # UK608
 $phiFI609=69.0710443645768; # FI609
+$phiPL610=52.2759328000000; # PL610
+$phiPL611=49.9649386000000; # PL611
+$phiPL612=53.5939042000000; # PL612
 $phiUTR2=49.6382040054817; # UTR2
 $phiGMRT=19.0930027830705; # GMRT
 $phiKAT7=-30.7213885708783; # KAT7
+$phiMEERKAT=-30.7110555556117; # MeerKAT
 $phiEMBRACE=47.382; # EMBRACE
 
 # Longitude
@@ -57,9 +61,13 @@ $lambdaFR606=2.19250033617532; # FR606
 $lambdaSE607=11.9308890388522; # SE607
 $lambdaUK608=-1.43445875537285; # UK608
 $lambdaFI609=20.7610478990429; # FI609
+$lambdaPL610=17.0741606000000; # PL610
+$lambdaPL611=20.4896131000000; # PL611
+$lambdaPL612=20.5897506000000; # PL612
 $lambdaUTR2=36.9413500027937; # UTR2
 $lambdaGMRT=74.0565611576975; # GMRT
 $lambdaKAT7=21.4105542858234; # KAT7
+$lambdaMEERKAT=21.4438888892753 ; # MeerKAT
 $lambdaEMBRACE=2.1993; # EMBRACE
 
 $ra = "";
@@ -139,6 +147,15 @@ if ($site eq "gbt") {
 } elsif ($site eq "fi609") {
  $lambda=$lambdaFI609;
  $phi=$phiFI609;
+} elsif ($site eq "pl610") {
+ $lambda=$lambdaPL610;
+ $phi=$phiPL610;
+} elsif ($site eq "pl611") {
+ $lambda=$lambdaPL611;
+ $phi=$phiPL611;
+} elsif ($site eq "pl612") {
+ $lambda=$lambdaPL612;
+ $phi=$phiPL612;
 } elsif ($site eq "utr2") {
  $lambda=$lambdaUTR2;
  $phi=$phiUTR2;
@@ -148,6 +165,9 @@ if ($site eq "gbt") {
 } elsif ($site eq "kat7") {
  $lambda=$lambdaKAT7;
  $phi=$phiKAT7;
+} elsif ($site eq "meerkat") {
+ $lambda=$lambdaMEERKAT;
+ $phi=$phiMEERKAT;
 } elsif ($site eq "embrace") {
  $lambda=$lambdaEMBRACE;
  $phi=$phiEMBRACE;
@@ -230,17 +250,18 @@ sub help {
  print "$prg: calculates AZ, EL(ZA), HA  for a given source and time at given observatory\n";
  print "Usage: $prg [options]\n";
  print "        -t   TIME   - UTC time in format \"DD.MM.YYYY hh:mm:ss.sss\" or \"YYYY-MM-DDThh:mm:ss.sss\"\n";
- print "                      if no time is pointed than current UTC time will be used\n";
- print "        -ra  RA     - right assention of the source where RA is in \"hh:mm:ss.sss\"\n";
- print "        -dec DEC    - declination of the source where DEC is in \"[+\-]dd:mm:ss.sss\"\n";
- print "        -lat PHI    - latitude in degrees (default - FR606)\n";
- print "        -lon LAMBDA - longitude in degrees (default - FR606)\n";
+ print "                      If no time is pointed than current UTC time will be used.\n";
+ print "        -ra  RA     - Right Ascension of the source, where RA is in \"hh:mm:ss.sss\"\n";
+ print "        -dec DEC    - Declination of the source where DEC is in \"[+\-]dd:mm:ss.sss\"\n";
+ print "        -lat PHI    - Latitude in degrees (default - SE607)\n";
+ print "        -lon LAMBDA - Longitude in degrees (default - SE607)\n";
  print "                      Western longitudes are negative!\n";
  print "        -site NAME  - Use pre-defined observatory. Following are available: \n";
  print "                      GBT, Arecibo, Parkes, Jodrell, Nancay, Effelsberg, HartRAO,\n";
  print "                      WSRT, LOFAR, DE601, DE602, DE603, DE604, DE605, FR606,\n";
- print "                      SE607, UK608, FI609, UTR2, GMRT, KAT7, EMBRACE.\n";
- print "        -h          - print this help\n";
+ print "                      SE607, UK608, FI609, PL610, PL611, PL612, UTR2,\n";
+ print "                      GMRT, KAT7, MeerKAT, EMBRACE.\n";
+ print "        -h          - Print this help.\n";
 }
 
 # get current UTC time

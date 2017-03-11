@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #
 # Calculate JD, MJD given usual date, and vice versa
 #

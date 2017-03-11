@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# Copyright (C) 2017 by Maciej Serylak
+# Licensed under the Academic Free License version 3.0
+# This program comes with ABSOLUTELY NO WARRANTY.
+# You are free to modify and redistribute this code as long
+# as you do not remove the above attribution and reasonably
+# inform recipients that you have modified the original work.
+
 help()
 {
    echo ''
@@ -28,50 +35,36 @@ prepare_commands()
    #echo ${pos_rad[@]}
    if [ ${antennas} = "LBA" ] ; then # prepare beamctl commands for LBA observations
       /usr/bin/killall -9 beamctl
-      /opt/lofar/bin/rspctl --rcumode=3
-      /opt/lofar/bin/rspctl --rcuenable=1
-      /opt/lofar/bin/rspctl --specinv=0
-      /usr/bin/sleep 20
-      /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:243 --subbands=${startsubband}:$((startsubband+243)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:60 --subbands=${startsubband}:$((startsubband+60)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=61:121 --subbands=$((startsubband+61)):$((startsubband+121)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=122:182 --subbands=$((startsubband+122)):$((startsubband+182)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=183:243 --subbands=$((startsubband+183)):$((startsubband+243)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
+      /usr/bin/sleep 5
+      /usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:243 --subbands=${startsubband}:$((startsubband+243)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:60 --subbands=${startsubband}:$((startsubband+60)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=61:121 --subbands=$((startsubband+61)):$((startsubband+121)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=122:182 --subbands=$((startsubband+122)):$((startsubband+182)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=183:243 --subbands=$((startsubband+183)):$((startsubband+243)) --digdir=${pos_rad[0]},${pos_rad[1]},J2000
    elif [ ${antennas} = "HBA" ] ; then # prepare beamctl commands for HBA observations
       /usr/bin/killall -9 beamctl
-      /opt/lofar/bin/rspctl --rcuenable=0
-      /opt/lofar/bin/rspctl --rcumode=0
-      /opt/lofar/sbin/poweruphba.sh 5
-      #/data/home/user3/poweruphba_broken2.sh
-      /usr/bin/sleep 20
-      /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:243 --subbands=${startsubband}:$((startsubband+243)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:60 --subbands=${startsubband}:$((startsubband+60)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=61:121 --subbands=$((startsubband+61)):$((startsubband+121)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=122:182 --subbands=$((startsubband+122)):$((startsubband+182)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=183:243 --subbands=$((startsubband+183)):$((startsubband+243)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
+      /usr/bin/sleep 5
+      /usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:243 --subbands=${startsubband}:$((startsubband+243)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:60 --subbands=${startsubband}:$((startsubband+60)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=61:121 --subbands=$((startsubband+61)):$((startsubband+121)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=122:182 --subbands=$((startsubband+122)):$((startsubband+182)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=183:243 --subbands=$((startsubband+183)):$((startsubband+243)) --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
    elif [ ${antennas} = "LBA8" ] ; then # prepare beamctl commands for LBA observations
       /usr/bin/killall -9 beamctl
-      /opt/lofar/bin/rspctl --rcumode=3
-      /opt/lofar/bin/rspctl --rcuenable=1
-      /opt/lofar/bin/rspctl --specinv=0
-      /usr/bin/sleep 20
-      /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:487 --subbands=12:499 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:121 --subbands=12:133 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=122:243 --subbands=134:255 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=244:365 --subbands=256:377 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=366:487 --subbands=378:499 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
+      /usr/bin/sleep 5
+      /usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:487 --subbands=12:499 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=0:121 --subbands=12:133 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=122:243 --subbands=134:255 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=244:365 --subbands=256:377 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=LBA_INNER --rcus=0:191 --band=30_90 --beamlets=366:487 --subbands=378:499 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
    elif [ ${antennas} = "HBA8" ] ; then # prepare beamctl commands for 8 bit mode HBA observations
       /usr/bin/killall -9 beamctl
-      /opt/lofar/bin/rspctl --rcuenable=0
-      /opt/lofar/bin/rspctl --rcumode=0
-      /opt/lofar/sbin/poweruphba.sh 5
-      #/data/home/user3/poweruphba_broken2.sh
-      /usr/bin/sleep 20
-      /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:487 --subbands=12:499 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:121 --subbands=12:133 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=122:243 --subbands=134:255 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=244:365 --subbands=256:377 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
-      #/opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=366:487 --subbands=378:499 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000 &
+      /usr/bin/sleep 5
+      /usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:487 --subbands=12:499 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=0:121 --subbands=12:133 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=122:243 --subbands=134:255 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=244:365 --subbands=256:377 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
+      #/usr/bin/nohup /opt/lofar/bin/beamctl --antennaset=HBA_DUAL --rcus=0:191 --band=110_190 --beamlets=366:487 --subbands=378:499 --anadir=${pos_rad[0]},${pos_rad[1]},J2000 --digdir=${pos_rad[0]},${pos_rad[1]},J2000
    fi
 }
 

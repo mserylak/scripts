@@ -14,8 +14,6 @@ import struct
 import sys
 import ephem
 import katpoint
-#import time
-#import datetime
 import optparse as opt
 
 # Functions used in SIGPROC header creation

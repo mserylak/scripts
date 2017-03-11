@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# Make a table of subband number and equivalent 
+
+# Make a table of subband number and equivalent.
 
 # low / centre / high frequency for the RCU mode 5.
 
