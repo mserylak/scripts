@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# Copyright (C) 2017 by Maciej Serylak
+# Licensed under the Academic Free License version 3.0
+# This program comes with ABSOLUTELY NO WARRANTY.
+# You are free to modify and redistribute this code as long
+# as you do not remove the above attribution and reasonably
+# inform recipients that you have modified the original work.
+
 help()
 {
    echo ''

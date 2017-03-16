@@ -127,8 +127,7 @@ def get_zero_weights(archive, psrsh, verbose = False):
 # Main body of the script.
 if __name__=="__main__":
   # Parsing the command line options.
-  parser = argparse.ArgumentParser(prog = "report.py",
-                                   usage = "%(prog)s --stem <stemName> [options]",
+  parser = argparse.ArgumentParser(usage = "reduceSingleStation.py --stem <stemName> [options]",
                                    description = "Reduce LOFAR single station TimerArchive data. Version %s" % __version__,
                                    formatter_class = lambda prog: argparse.HelpFormatter(prog, max_help_position=100, width = 250),
                                    epilog = "Copyright (C) 2017 by Maciej Serylak")
@@ -142,6 +141,12 @@ if __name__=="__main__":
   scriptStartTime = time.time()
 
   # Check for stemName presence.
+  if not args.stemName:
+    print parser.description, "\n"
+    print "usage:", parser.usage, "\n"
+    print parser.epilog
+    sys.exit(0)
+
   if not args.stemName:
     print 
     sys.exit(0)
@@ -247,6 +252,11 @@ if __name__=="__main__":
     get_zero_weights(cleanRFI, psrshFilename)
   print "\nSaving data to file %s\n" % (addedFile + ".zap")
   cleanRFI.unload(addedFile + ".zap")
+
+  # End timing script and produce result
+  scriptEndTime = time.time()
+  print "\nScript running time: %.1f s.\n" % (scriptEndTime - scriptStartTime)
++ ".zap")
 
   # End timing script and produce result
   scriptEndTime = time.time()

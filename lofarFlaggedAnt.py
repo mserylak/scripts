@@ -8,57 +8,68 @@
 # inform recipients that you have modified the original work.
 
 import numpy as np
-import os, os.path, stat, glob, sys, getopt, re
-import optparse as opt
+import os
+import os.path
+import stat
+import glob
+import sys
+import getopt
+import re
+import argparse
 import h5py
+import time
 
-# Main body of the script
+__version__ = 1.1
+
+
+# Main body of the script.
 if __name__=="__main__":
-  #
-  # Parsing the command line options
-  #
-  usage = "Usage: %prog --h5 <h5_file> --ant <ant_file>"
-  cmdline = opt.OptionParser(usage)
-  cmdline.formatter.max_help_position = 50 # increase space reserved for option flags (default 24), trick to make the help more readable
-  cmdline.formatter.width=200 # increase help width from 120 to 200
-  cmdline.add_option('--h5', dest='h5file', metavar='*.h5', help="HDF5 .h5 file with the meta info about the observation.", default="", type='str')
-  cmdline.add_option('--ant', dest='antfile', metavar='*_AntOff.txt', help="Text file with the meta info about the bad tiles/dipoles.", default="", type='str')
+  # Parsing the command line options.
+  parser = argparse.ArgumentParser(usage = "lofarFlaggedAnt.py --h5 <h5File> --ant <antFile>",
+                                   description = "Reduce LOFAR single station TimerArchive data. Version %s" % __version__,
+                                   formatter_class = lambda prog: argparse.HelpFormatter(prog, max_help_position=100, width = 250),
+                                   epilog = "Copyright (C) 2017 by Maciej Serylak")
+  parser.add_argument("--h5", dest = "h5File", metavar = "<h5File>", default = "", help = "specify HDF5 file with the meta info about the observation")
+  parser.add_argument("--ant", dest = "antFile", metavar = "<antFile>", default = "", help = "specify text file with the meta info about the bad tiles/dipoles")
+  args = parser.parse_args() # Reading command line options.
 
-  # reading cmd options
-  (opts, args) = cmdline.parse_args()
+  # Start script timing.
+  scriptStartTime = time.time()
 
-  if not opts.h5file and not opts.antfile:
-    cmdline.print_usage()
+  # Check for h5File and antFile presence.
+  if not args.h5File and not args.antFile:
+    print "\nNeed both HDF5 .h5 and _AntOff.txt files.\n"
+    print parser.description, "\n"
+    print "usage:", parser.usage, "\n"
+    print parser.epilog
     sys.exit(0)
 
-  if not opts.h5file or not opts.antfile:
-    print "\nNeed both HDF5 .h5 and _AntOff.txt files.\n"
-    cmdline.print_usage()
-    sys.exit(1)
+  # Loading HDF5 .h5 file.
+  h5File = args.h5File
+  f5 = h5py.File(h5File, 'r')
+  h5BandFilter = f5.attrs['FILTER_SELECTION']
+  h5Antenna = h5BandFilter.split("_")[0]
+  h5Stations=f5.attrs['OBSERVATION_STATIONS_LIST']
+  nCoreStations = len([s for s in h5Stations if s[0:2] == "CS"])
+  # Because in the list for HBA there are sub-stations.
+  if h5Antenna == "HBA":
+    nCoreStations /= 2
 
-  # loading HDF5 .h5 file
-  h5file = opts.h5file
-  f5 = h5py.File(h5file, 'r')
-  h5_bandFilter = f5.attrs['FILTER_SELECTION']
-  h5_antenna = h5_bandFilter.split("_")[0]
-  h5_stations=f5.attrs['OBSERVATION_STATIONS_LIST']
-  ncorestations = len([s for s in h5_stations if s[0:2] == "CS"])
-  # because in the list for HBA there are sub-stations
-  if h5_antenna == "HBA":
-    ncorestations /= 2
+  # Loading _AntOff.txt file
+  antFile = args.antFile
+  antStations, antBadTiles = np.loadtxt(antFile, usecols = [2, 3], skiprows = 0, unpack = True, dtype = str)
+  index = np.zeros(len(h5Stations), dtype = int)
 
-  # loading _AntOff.txt file
-  antfile = opts.antfile
-  ant_stations, ant_badtiles = np.loadtxt(antfile, usecols=[2, 3], skiprows=0, unpack=True, dtype=str)
+  # Loop through station list from h5 file and compare which were really used in observation.
+  for i in range(len(h5Stations)):
+    index[i] = list(antStations).index(h5Stations[i])
+  newBadTiles = np.zeros(len(h5Stations))
+  for i in range(len(h5Stations)):
+    newBadTiles[i] = antBadTiles[index[i]]
+    #print antStations[index[i]], antBadTiles[index[i]]
 
-  index = np.zeros(len(h5_stations))
-  # loop through station list from h5 file and compare which were really used in observation
-  for i in range(len(h5_stations)):
-    index[i] = list(ant_stations).index(h5_stations[i])
+  print h5File.split("_")[0], nCoreStations, np.sum(newBadTiles)/(48*nCoreStations)
 
-  new_bad_tiles = np.zeros(len(h5_stations))
-  for i in range(len(h5_stations)):
-    new_bad_tiles[i] = ant_badtiles[index[i]]
-    #print ant_stations[index[i]], ant_badtiles[index[i]]
-
-  print h5file.split("_")[0], ncorestations, np.sum(new_bad_tiles)/(48*ncorestations)
+  # End timing script and produce result.
+  scriptEndTime = time.time()
+  print "\nScript running time: %.1f s.\n" % (scriptEndTime - scriptStartTime)

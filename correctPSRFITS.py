@@ -115,3 +115,7 @@ if __name__=="__main__":
     fileExtension = args.fileExtension
     saveFilename = fileName + "." + fileExtension
     dataFile.writeto(saveFilename)
+
+  # End timing script and produce result.
+  scriptEndTime = time.time()
+  print "\nScript running time: %.1f s.\n" % (scriptEndTime - scriptStartTime)
