@@ -21,10 +21,10 @@ from coast_guard import cleaners
 from coast_guard import clean_utils
 from coast_guard import utils
 
-__version__ = 1.1
+__version__ = 1.2
 
 
-def get_archive_info(archive):
+def getArchiveInfo(archive):
   """Query archive attributes.
     Input:
       archive: loaded PSRCHIVE archive object.
@@ -86,7 +86,7 @@ def get_archive_info(archive):
   print "be:delay         Backend propn delay from digi. input.      %s\n" % backendDelay
 
 
-def get_zero_weights(archive, psrsh, verbose = False):
+def getZeroWeights(archive, psrsh, verbose = False):
   """Query the number of subint-channels with zeroed weigths 
     (i.e. cleaned) in TimerArchive/PSRFITS file.
        Input:
@@ -123,7 +123,6 @@ def get_zero_weights(archive, psrsh, verbose = False):
   print "%s data points out of %s with weights set to zero." % (counter, weights.size)
   print "%.2f%% data points set to zero." % (totalPercent)
 
-
 # Main body of the script.
 if __name__=="__main__":
   # Parsing the command line options.
@@ -145,10 +144,6 @@ if __name__=="__main__":
     print parser.description, "\n"
     print "usage:", parser.usage, "\n"
     print parser.epilog
-    sys.exit(0)
-
-  if not args.stemName:
-    print 
     sys.exit(0)
 
   # Check for outputDir presence and validate writing permissions.
@@ -186,6 +181,8 @@ if __name__=="__main__":
     sys.exit(0)
 
   # Read ephemeris and check if it conforms to standard (has EPHVER in it).
+  # This is very rudimentary check. One should check for minimal set of values
+  # present in the par file. More through checks are on TODO list.
   ephemFile = args.ephemFile
   if not ephemFile:
     print "\nOption --eph not specified. Continuing without updating ephemeris.\n"
@@ -200,7 +197,7 @@ if __name__=="__main__":
 
   # Add data files together.
   addedFile = stemName + ".ar"
-  print "\nAdding data files to %s\n" % addedFile
+  print "\nAdding data files to create %s\n" % addedFile
   cmd = ["psradd", "-m", "time", "-q", "-R", "-o", addedFile, fileNames[0], fileNames[1], fileNames[2], fileNames[3]]
   pipe = subprocess.Popen(cmd, shell=False, cwd=workDir, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
   (stdoutdata, stderrdata) = pipe.communicate()
@@ -211,7 +208,7 @@ if __name__=="__main__":
 
   # Reading data.
   archive = psr.Archive_load(workDir + "/" + addedFile)
-  get_archive_info(archive)
+  getArchiveInfo(archive)
 
   if updateEphem:
     print "\nUpdating ephemeris in: %s\n" % addedFile
@@ -245,18 +242,13 @@ if __name__=="__main__":
   cleaner.parse_config_string(surgicalDefaultParams)
   print "\nCleaning archive from RFI.\n"
   cleaner.run(cleanRFI)
-  get_archive_info(cleanRFI)
+  getArchiveInfo(cleanRFI)
   if args.psrshSave:
     psrshFilename = addedFile + ".psh"
     print psrshFilename
-    get_zero_weights(cleanRFI, psrshFilename)
+    getZeroWeights(cleanRFI, psrshFilename)
   print "\nSaving data to file %s\n" % (addedFile + ".zap")
   cleanRFI.unload(addedFile + ".zap")
-
-  # End timing script and produce result
-  scriptEndTime = time.time()
-  print "\nScript running time: %.1f s.\n" % (scriptEndTime - scriptStartTime)
-+ ".zap")
 
   # End timing script and produce result
   scriptEndTime = time.time()
