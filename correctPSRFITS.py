@@ -13,7 +13,7 @@ import time
 import astropy.io.fits as pyfits
 from astropy.time import Time
 
-__version__ = 1.0
+__version__ = 1.1
 
 # Main body of the script.
 if __name__=="__main__":
@@ -76,9 +76,8 @@ if __name__=="__main__":
   hduPrimary = dataFile[0].header
   hduHistory = dataFile[1].header
   hduSubint = dataFile[2].header
-  startTime = Time(hduPrimary["STT_IMJD"] + hduPrimary["STT_SMJD"] / 3600.0 / 24.0, format = "mjd")
+  startTime = Time(hduPrimary["STT_IMJD"] + ((hduPrimary["STT_SMJD"] + hduPrimary["STT_OFFS"]) / 86400.0), format = "mjd")
   startTime.format = "isot"
-  startTime = startTime.value[:-3] + str(hduPrimary['STT_OFFS'])[2:]
   hduPrimary["TELESCOP"] = "MEERKAT"
   hduPrimary["FRONTEND"] = "L-BAND"
   hduPrimary["RA"] = rightAscension
