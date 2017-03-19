@@ -18,6 +18,7 @@ import time
 
 __version__ = 1.2
 
+
 def translateHeader(psrfitsFile):
   psrfitsHeader = psrfitsFile.header
   subintHdr = psrfitsFile.fits["SUBINT"].header
@@ -37,23 +38,23 @@ def translateHeader(psrfitsFile):
   filHeader["src_raj"] = float(psrfitsHeader["RA"].replace(":",""))
   filHeader["src_dej"] = float(psrfitsHeader["DEC"].replace(":",""))
   filHeader["tstart"] = psrfitsHeader["STT_IMJD"] + ((psrfitsHeader["STT_SMJD"] + psrfitsHeader["STT_OFFS"]) / 86400.0)
-  filHeader["tsamp"] = subint_hdr["TBIN"]
-  filHeader["nbits"] = None # set by user
-  filHeader["fch1"] = psrfitsHeader["OBSFREQ"] + np.abs(psrfitsHeader["OBSBW"]) / 2.0 - np.abs(subint_hdr["CHAN_BW"]) / 2.0
-  filHeader["foff"] = -1.0*np.abs(subint_hdr["CHAN_BW"])
-  filHeader["nchans"] = subint_hdr["NCHAN"]
-  filHeader["nifs"] = subint_hdr["NPOL"]
+  filHeader["tsamp"] = subintHdr["TBIN"]
+  filHeader["nbits"] = None
+  filHeader["fch1"] = psrfitsHeader["OBSFREQ"] + np.abs(psrfitsHeader["OBSBW"]) / 2.0 - np.abs(subintHdr["CHAN_BW"]) / 2.0
+  filHeader["foff"] = -1.0 * np.abs(subintHdr["CHAN_BW"])
+  filHeader["nchans"] = subintHdr["NCHAN"]
+  filHeader["nifs"] = subintHdr["NPOL"]
   return filHeader
 
-def main(fitsFileName, outFile, nBits, applyWeights, applyScales, applyOffsets):
 
+def main(fitsFileName, outFile, nBits, applyWeights, applyScales, applyOffsets):
   # Start script timing.
   scriptStartTime = time.time()
 
   psrfitsFile = psrfits.PsrfitsFile(fitsFileName)
   filHeader = translateHeader(psrfitsFile) 
   filHeader["nbits"] = nBits
-  outfil = filterbank.create_filterbank_file(outFile, filHeader, nBits = nBits)
+  outfil = filterbank.create_filterbank_file(outFile, filHeader, nbits = nBits)
 
   # Flip the band if frequency channels are in ascending order.
   if psrfitsFile.fits["SUBINT"].header["CHAN_BW"] > 0:
@@ -63,8 +64,8 @@ def main(fitsFileName, outFile, nBits, applyWeights, applyScales, applyOffsets):
     flipBand = False
 
   # Check input data for nBits.
-  if psrfitsFile.nBits < 4:
-    raise ValueError("\n%d-bit data not supported.\n" % psrfitsFile.nBits)
+  if psrfitsFile.nbits < 4:
+    raise ValueError("\n%d-bit data not supported.\n" % psrfitsFile.nbits)
 
   # Calculate scaling factor if output data is not 32 bits.
   if nBits != 32:
@@ -112,8 +113,8 @@ def main(fitsFileName, outFile, nBits, applyWeights, applyScales, applyOffsets):
 # Main body of the script.
 if __name__=="__main__":
   # Parsing the command line options.
-  parser = argparse.ArgumentParser(usage = "psrfits2fil.py [options] <inputFits> ",
-                                   description = "Convert PSRFITS data into filterbank data file. Version %s" % __version__,
+  parser = argparse.ArgumentParser(usage = "psrfits2fil.py [options] --file <inputFits> ",
+                                   description = "Convert PSRFITS data into SIGPROC filterbank data file. Version %s" % __version__,
                                    formatter_class = lambda prog: argparse.HelpFormatter(prog, max_help_position=100, width = 250),
                                    epilog = "Copyright (C) 2017 by Paul Scholz, Patrick Lazarus, Maciej Serylak")
   parser.add_argument("--file", dest = "fitsFileName", action = "store", metavar = "<fileName>", default = "", help = "specify input file name")
