@@ -79,8 +79,8 @@ if __name__=="__main__":
   startTime = Time(hduPrimary["STT_IMJD"] + ((hduPrimary["STT_SMJD"] + hduPrimary["STT_OFFS"]) / 86400.0), format = "mjd", precision = 9)
   startTime.format = "isot"
   startTime = startTime.value
-  hduPrimary["TELESCOP"] = "MEERKAT"
-  hduPrimary["FRONTEND"] = "L-BAND"
+  hduPrimary["TELESCOP"] = "MeerKAT"
+  hduPrimary["FRONTEND"] = "L-band"
   hduPrimary["RA"] = rightAscension
   hduPrimary["DEC"] = declination
   hduPrimary["STT_CRD1"] = rightAscension
