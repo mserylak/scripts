@@ -76,8 +76,9 @@ if __name__=="__main__":
   hduPrimary = dataFile[0].header
   hduHistory = dataFile[1].header
   hduSubint = dataFile[2].header
-  startTime = Time(hduPrimary["STT_IMJD"] + ((hduPrimary["STT_SMJD"] + hduPrimary["STT_OFFS"]) / 86400.0), format = "mjd")
+  startTime = Time(hduPrimary["STT_IMJD"] + ((hduPrimary["STT_SMJD"] + hduPrimary["STT_OFFS"]) / 86400.0), format = "mjd", precision = 9)
   startTime.format = "isot"
+  startTime = startTime.value
   hduPrimary["TELESCOP"] = "MEERKAT"
   hduPrimary["FRONTEND"] = "L-BAND"
   hduPrimary["RA"] = rightAscension
