@@ -35,7 +35,7 @@ if __name__=="__main__":
   cmdline.add_option('--dynamic', type = 'string', dest = 'dynamic', help = 'Select multiple spectra to plot dynamic spectrum.')
   cmdline.add_option('--timeseries', type = 'string', dest = 'timeseries', help = 'Select single channel and range of spectra to plot the timeseries.')
   cmdline.add_option('--bandpass', dest = 'bandpass', action = "store_true", help = 'Plot total bandpass.')
-  cmdline.add_option('--save', dest = 'savePlot', action = "store_true", help = 'Save plot to .png file instead of interacive plotting.')
+  cmdline.add_option('--save', dest = 'savePlot', action = "store_true", help = 'Save plot to .png file instead of interactive plotting.')
 
   # reading cmd options
   (opts, args) = cmdline.parse_args()
@@ -44,7 +44,7 @@ if __name__=="__main__":
     cmdline.print_usage()
     sys.exit(0)
 
-  # Define constans and variables.
+  # Define constants and variables.
   filterbankFilename = opts.file
   filterbankFile = FilReader(filterbankFilename) # read filterbank file
   #print "File %s opened." % (filterbankFilename)
@@ -61,7 +61,7 @@ if __name__=="__main__":
     (opts.dynamic and opts.timeseries) or\
     (opts.block and opts.bandpass) or\
     (opts.block and opts.timeseries):
-    print "Only one option allowed."
+    print "Only one plotting option allowed."
     sys.exit(0)
 
   print "File %s has %d channels and %d samples/spectra." % (filterbankFilename, numberChannels, numberSpectra)
@@ -107,6 +107,7 @@ if __name__=="__main__":
       print "Selected spectrum exceeds available number of spectra!"
     dynamicSpectrum = filterbankFile.readBlock(dynamic[0], dynamic[-1]) # read specific spectrum from the data
     plt.imshow(dynamicSpectrum, origin='lower', cmap = cm.hot, interpolation='nearest', aspect='auto')
+    plt.colorbar()
     plt.xlabel("Spectrum")
     plt.ylabel("Channel")
     if not opts.savePlot:
