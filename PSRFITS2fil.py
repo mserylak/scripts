@@ -12,6 +12,7 @@ import sys
 import time
 import struct
 import argparse
+import warnings
 import numpy as np
 np.set_printoptions(threshold=np.nan)
 from astropy.time import Time
@@ -288,6 +289,7 @@ if __name__=="__main__":
   parser.add_argument("--file", dest = "psrfitsFileName", action = "store", metavar = "<fileName>", default = "", help = "specify input file name")
   parser.add_argument("--nBit", dest = "nBitsOut", action = "store", metavar = "<nBits>", default = 32, type = int, help = "specify number of bits in the output .fil file (default: 32)")
   parser.add_argument("--out", dest = "outFileName", action = "store", metavar = "<outFileName>", default = "", help = "specify output filterbank file name (default: replace input extension with .fil)")
+  parser.add_argument("--nSub", dest = "nSubProcess", action = "store", metavar = "<nSubs>", default = "", help = "specify number of sub-integrations to process (default: process all)")
   parser.add_argument("--sumIFs",    dest = "sumIFs", action = "store_true", help = "form total-power data")
   parser.add_argument("--noweights", dest = "applyWeights", action = "store_false", help = "do not apply weights when converting data")
   parser.add_argument("--noscales",  dest = "applyScales",  action = "store_false", help = "do not apply scales when converting data")
@@ -325,6 +327,15 @@ if __name__=="__main__":
   if nBits != 8:
     raise ValueError("Reading %d-bit data not supported." % nBits)
 
+  # Checking number of available sub-integrations.
+  nSubint = psrfitsFile["SUBINT"].header["NAXIS2"]
+  nSubProcess = int(args.nSubProcess)
+  if nSubProcess >= nSubint:
+    warnings.warn("Only %d sub-integrations available. Re-setting to available number of sub-integrations." % nSubint)
+    nSubProcess = nSubint
+  if nSubProcess < 0:
+    raise ValueError("Cannot process negative number of sub-integrations.")
+
   # Creating and populating dictionary with SIGPROC header keys and values.
   sigprocHeader = translateHeader(psrfitsFile)
   sigprocHeader["nbits"] = nBitsOut
@@ -356,7 +367,7 @@ if __name__=="__main__":
     raise ValueError("Unknown polarisation type: %s" % polType)
 
   # Create SIGPROC header. Only add recognized parameters.
-  fileOut = open(outFileName, "wb+")
+  fileOut = open(outFileName, "wb")
   fileOut.write(addToHeader("HEADER_START", None))
   for parameterName in sigprocHeader.keys():
     if parameterName not in headerParameters:
@@ -375,7 +386,7 @@ if __name__=="__main__":
 
   # Calculate scaling factor if output data is not 32 bits.
   if nBitsOut != 32:
-    print "Calculating statistics on first subintegration."
+    print "Calculating statistics on first sub-integration."
     subint0 = readSubint(psrfitsFile, 0, args.applyWeights, args.applyScales, args.applyOffsets, sumIFs)
     #newMax = np.mean(subint0) + 3 * np.std(subint0)
     newMax = 3 * np.median(subint0)
@@ -396,8 +407,7 @@ if __name__=="__main__":
   print "Writing data..."
 
   # Converting the data to SIGPROC filterbank.
-  nSubint = psrfitsFile["SUBINT"].header["NAXIS2"]
-  for iSub in range(nSubint):
+  for iSub in range(nSubProcess):
     subint = readSubint(psrfitsFile, iSub, args.applyWeights, args.applyScales, args.applyOffsets, sumIFs)
     if flipBand:
       subint = np.fliplr(subint)
@@ -416,61 +426,3 @@ if __name__=="__main__":
   # End timing script and produce result.
   scriptEndTime = time.time()
   print "Script running time: %.1f s." % (scriptEndTime - scriptStartTime)
-
-
-
-
-
-#import astropy.io.fits as pyfits
-#import matplotlib.pyplot as plt
-#import numpy as np
-#from matplotlib import cm
-#def getWeights(data, iSub):
-#  """
-#  Return weights for a particular subint.
-#    Inputs:
-#      iSub: index of subint (first subint is 0).
-#    Output:
-#       weights: subint weights (there is one value for each channel).
-#  """
-#  return data["SUBINT"].data[iSub]["DAT_WTS"]
-#def getScales(data, iSub):
-#  """
-#  Return scales for a particular subint.
-#    Inputs:
-#      iSub: index of subint (first subint is 0).
-#    Output:
-#      scales: subint scales (there is one value for each channel).
-#  """
-#  return data["SUBINT"].data[iSub]["DAT_SCL"]
-#def getOffsets(data, iSub):
-#  """
-#  Return offsets for a particular subint.
-#    Inputs:
-#      iSub: index of subint (first subint is 0).
-#    Output:
-#      offsets: subint offsets (there is one value for each channel).
-#  """
-#  return data["SUBINT"].data[iSub]["DAT_OFFS"]
-#fitsName = "2017-02-21-13_29_46.sf"
-#fits = pyfits.open(fitsName, mode = "readonly", memmap = True)
-#nPol = fits["SUBINT"].header["NPOL"]
-#nBit = fits["SUBINT"].header["NBITS"]
-#nSampPerSubint = fits["SUBINT"].header["NSBLK"]
-#nChan = fits["SUBINT"].header["NCHAN"]
-#nSub = fits["SUBINT"].header["NAXIS2"]
-#iSub = nSub / 2
-#subintData = fits["SUBINT"].data[iSub]["DATA"]
-#subintDataShape = subintData.shape
-#subintDataShape
-#data = np.array(subintData)
-#offsets = getOffsets(fits, iSub)
-#offsets = offsets.reshape((nPol, nChan))
-#scales = getScales(fits, iSub)
-#scales = scales.reshape((nPol, nChan))
-#weights = getWeights(fits, iSub)
-#dataWSO = ((data * scales) + offsets) * weights
-#dataTot = dataWSO[:, 0, :] + dataWSO[:, 1, :]
-#dataTot[:, 100:115] = 0.0
-#plt.imshow(dataTot.T, interpolation="nearest",aspect="auto",cmap = cm.afmhot)
-#plt.show()
