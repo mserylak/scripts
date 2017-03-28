@@ -290,7 +290,7 @@ if __name__=="__main__":
   parser.add_argument("--nBit", dest = "nBitsOut", action = "store", metavar = "<nBits>", default = 32, type = int, help = "specify number of bits in the output .fil file (default: 32)")
   parser.add_argument("--out", dest = "outFileName", action = "store", metavar = "<outFileName>", default = "", help = "specify output filterbank file name (default: replace input extension with .fil)")
   parser.add_argument("--nSub", dest = "nSubProcess", action = "store", metavar = "<nSubs>", default = "", help = "specify number of sub-integrations to process (default: process all)")
-  parser.add_argument("--sumIFs",    dest = "sumIFs", action = "store_true", help = "form total-power data")
+  parser.add_argument("--sumIFs", dest = "sumIFs", action = "store_true", help = "form total-power data")
   parser.add_argument("--noweights", dest = "applyWeights", action = "store_false", help = "do not apply weights when converting data")
   parser.add_argument("--noscales",  dest = "applyScales",  action = "store_false", help = "do not apply scales when converting data")
   parser.add_argument("--nooffsets", dest = "applyOffsets", action = "store_false", help = "do not apply offsets when converting data")
