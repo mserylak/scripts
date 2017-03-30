@@ -329,7 +329,10 @@ if __name__=="__main__":
 
   # Checking number of available sub-integrations.
   nSubint = psrfitsFile["SUBINT"].header["NAXIS2"]
-  nSubProcess = int(args.nSubProcess)
+  if args.nSubProcess:
+    nSubProcess = int(args.nSubProcess)
+  else:
+    nSubProcess = nSubint
   if nSubProcess >= nSubint:
     warnings.warn("Only %d sub-integrations available. Re-setting to available number of sub-integrations." % nSubint)
     nSubProcess = nSubint
