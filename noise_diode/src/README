@@ -1,0 +1,25 @@
+Script to read and unpack fbf H5 data
+    python unpack_fbf_data.py -h
+
+    Verbose and debug output for development
+    python unpack_fbf_data_.py ../data/data0/1488274591.h5 ../data/data1/1488274591.h5 --debug --no_opt
+    python unpack_fbf_data.py ../data/data0/1488274591.h5 ../data/data1/1488274591.h5 --verbose --stokes
+
+    Some usage examples
+    python unpack_fbf_data.py ../data/data0/1488274591.h5 ../data/data1/1488274591.h5 --verbose --ndec 2 --stokesI
+    python unpack_fbf_data.py ../data/data0/1488274591.h5 ../data/data1/1488274591.h5 --verbose --vis --ndec 2
+    python unpack_fbf_data.py ../data/data0/1488274591.h5 ../data/data1/1488274591.h5
+
+
+Engineering test to characterise noise diode behaviour
+    python fbf_characterise_nd.py -h
+
+    Show short snippit of data (.25 secs) with very verbose output for debugging
+    python fbf_characterise_nd.py ../data/data0/1488274591.h5 --debug
+
+    Show a second's worth of data for easy manual verification
+    python fbf_characterise_nd.py ../data/data0/1488274591.h5 --verbose
+
+    If the file contains data for integration time
+    python fbf_characterise_nd.py ../data/data0/1488274591.h5 --nsec=60 --verbose
+
