@@ -32,7 +32,7 @@ if __name__=='__main__':
   parser.add_argument('--spectrum', dest = 'spectrum', action = 'store', metavar = '<spectrumNumber>', type = int, help = 'specify single spectrum to plot')
   parser.add_argument('--block', dest = 'block', action = 'store', metavar = '<startSpectrum> <endSpectrum>', default = '', help = 'specify range of spectra to average and plot')
   parser.add_argument('--dynamic', dest = 'dynamic', action = 'store', metavar = '<startSpectrum> <endSpectrum>', default = '', help = 'specify range of spectra and plot dynamic spectrum')
-  parser.add_argument('--cutoff', dest = 'cutoff', action = 'store', metavar = '<cutoffValue>', type = int, help = 'specify cutoff value for dynamic spectrum plot')
+  parser.add_argument('--cutoff', dest = 'cutoff', action = 'store', metavar = '<cutoffValue>', type = float, help = 'specify cutoff value for dynamic spectrum plot (default: 1.0')
   parser.add_argument('--timeseries', dest = 'timeseries', action = 'store', metavar = '<channelNumber> <startSpectrum> <endSpectrum>', default = '', help = 'specify single channel and range of spectra to plot timeseries')
   parser.add_argument('--bandpass', dest = 'bandpass', action = 'store_true', help = 'plot total bandpass')
   parser.add_argument('--save', dest = 'savePlot', action = 'store_true', help = 'save plot to .png file instead of interactive plotting')
@@ -73,7 +73,7 @@ if __name__=='__main__':
       print 'Selected spectrum exceeds available number of spectra!'
     singleSpectrum = filterbankFile.readBlock(spectrum, 1) # read specific spectrum from the data
     plt.plot(singleSpectrum)
-    plt.xlabel('Channel')
+    plt.xlabel('Channel number')
     plt.ylabel('Intensity (a.u.)')
     if not args.savePlot:
       plt.show()
@@ -91,7 +91,7 @@ if __name__=='__main__':
     blockSpectrum = filterbankFile.readBlock(block[0], block[-1]) # read specific spectrum from the data
     blockBandpass = blockSpectrum.get_bandpass() # calculate bandpass from entire observation
     plt.plot(blockBandpass)
-    plt.xlabel('Channel')
+    plt.xlabel('Channel number')
     plt.ylabel('Intensity (a.u.)')
     if not args.savePlot:
       plt.show()
@@ -103,15 +103,19 @@ if __name__=='__main__':
     dynamic = args.dynamic.split()
     dynamic = np.arange(int(dynamic[0]), int(dynamic[1]))
     #print dynamic[0], dynamic[-1]
-    cutoff = args.cutoff
+    if args.cutoff:
+      cutoff = args.cutoff
+    else:
+      cutoff = 1.0
     if (dynamic[-1] >= numberSpectra):
       dynamic[-1] = numberSpectra-1
       print 'Selected spectrum exceeds available number of spectra!'
     dynamicSpectrum = filterbankFile.readBlock(dynamic[0], dynamic[-1]) # read specific spectrum from the data
-    plt.imshow(dynamicSpectrum, vmax = cutoff, origin='lower', cmap = cm.hot, interpolation='nearest', aspect='auto')
+    dynamicSpectrumMax = dynamicSpectrum.max().item() * cutoff
+    plt.imshow(dynamicSpectrum, vmax = dynamicSpectrumMax, origin='lower', cmap = cm.hot, interpolation='nearest', aspect='auto')
     plt.colorbar()
-    plt.xlabel('Spectrum')
-    plt.ylabel('Channel')
+    plt.xlabel('Spectrum number')
+    plt.ylabel('Channel number')
     if not args.savePlot:
       plt.show()
     else:
@@ -134,7 +138,7 @@ if __name__=='__main__':
     timeseriesChannel.shape
     timeseriesSelected = timeseriesChannel[begin:end]
     plt.plot(timeseriesSelected)
-    plt.xlabel('Spectrum')
+    plt.xlabel('Spectrum number')
     plt.ylabel('Intensity (a.u.)')
     if not args.savePlot:
       plt.show()
@@ -145,7 +149,7 @@ if __name__=='__main__':
   elif args.bandpass:
     totalBandpass = filterbankFile.bandpass() # calculate bandpass from entire observation
     plt.plot(totalBandpass)
-    plt.xlabel('Channel')
+    plt.xlabel('Channel number')
     plt.ylabel('Intensity (a.u.)')
     if not args.savePlot:
       plt.show()
