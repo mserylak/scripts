@@ -28,12 +28,12 @@ if __name__=='__main__':
                                    description = 'Plot band-passes, dynamic spectra or timeseries from SIGPROC filterbank files. Version %s' % __version__,
                                    formatter_class = lambda prog: argparse.HelpFormatter(prog, max_help_position = 100, width = 250),
                                    epilog = 'Copyright (C) 2015 by Maciej Serylak')
-  parser.add_argument('--file', dest = 'filterbankFileName', action = 'store', metavar = '<fileName>', default = '', help = 'specify input file name')
+  parser.add_argument('--file', dest = 'filterbankFileName', action = 'store', metavar = '<fileName>', help = 'specify input file name')
   parser.add_argument('--spectrum', dest = 'spectrum', action = 'store', metavar = '<spectrumNumber>', type = int, help = 'specify single spectrum to plot')
-  parser.add_argument('--block', dest = 'block', action = 'store', metavar = '<startSpectrum> <endSpectrum>', default = ' ', help = 'specify range of spectra to average and plot')
-  parser.add_argument('--dynamic', dest = 'dynamic', action = 'store', metavar = '<startSpectrum> <endSpectrum>', default = ' ', help = 'specify range of spectra and plot dynamic spectrum')
+  parser.add_argument('--block', dest = 'block', action = 'store', metavar = '<startSpectrum> <endSpectrum>', help = 'specify range of spectra to average and plot')
+  parser.add_argument('--dynamic', dest = 'dynamic', action = 'store', metavar = '<startSpectrum> <endSpectrum>', help = 'specify range of spectra and plot dynamic spectrum')
   parser.add_argument('--cutoff', dest = 'cutoff', action = 'store', metavar = '<cutoffValue>', default = '1.0', type = float, help = 'specify cutoff value for dynamic spectrum plot (default: 1.0)')
-  parser.add_argument('--timeseries', dest = 'timeseries', action = 'store', metavar = '<channelNumber> <startSpectrum> <endSpectrum>', default = ' ', help = 'specify single channel and range of spectra to plot timeseries')
+  parser.add_argument('--timeseries', dest = 'timeseries', action = 'store', metavar = '<channelNumber> <startSpectrum> <endSpectrum>', help = 'specify single channel and range of spectra to plot timeseries')
   parser.add_argument('--bandpass', dest = 'bandpass', action = 'store_true', help = 'plot total bandpass')
   parser.add_argument('--save', dest = 'savePlot', action = 'store_true', help = 'save plot to .png file instead of interactive plotting')
   args = parser.parse_args()
