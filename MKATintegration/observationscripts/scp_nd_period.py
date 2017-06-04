@@ -54,7 +54,8 @@ with verify_and_connect(opts) as kat:
 
             # Noise diode cycle time set relative to track time
             # cycle_length=1./0.25
-            cycle_length = 1. / float(kat.data.sensor.actual_dump_rate.get_value())
+            # cycle_length = 1. / float(kat.data.sensor.actual_dump_rate.get_value())
+            cycle_length = 3.*(1. / float(kat.data.sensor.actual_dump_rate.get_value()))
             for target in observation_sources.iterfilter(el_limit_deg=opts.horizon):
                 user_logger.info("Initiating %g-second track on target '%s'" % (opts.track, target.name,))
                 # Track without noise diode

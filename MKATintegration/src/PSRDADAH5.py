@@ -26,7 +26,7 @@ import struct
 
 
 # Read raw FBF.h5 file
-def read_h5(
+def read(
         filename,
         observer,
         verbose=False,
@@ -325,7 +325,7 @@ if __name__ == "__main__":
     for idx, filename in enumerate(args):
         key = 'pol_%d' % idx
         print('Reading file %s into %s' % (filename, key))
-        [metadata, adc_clks] = read_h5(filename, observer, verbose=opts.debug)
+        [metadata, adc_clks] = read(filename, observer, verbose=opts.debug)
         beamformer[key] = {
                             'h5file': filename,
                             'metadata': metadata,
