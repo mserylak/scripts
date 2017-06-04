@@ -22,7 +22,7 @@ def main(options, args):
     db_uri = sysconf.conf.get("katobs","db_uri")
 
     logger.info("Logging started")
-    logger.info("Katobs obsbuild: db_uri=%s Make a MANUAL Block" % db_uri)
+    logger.info("Katobs obsbuild: db_uri=%s Make a Schedule Block" % db_uri)
 
     obs = obsbuild(user=options.user, db_uri=db_uri)
     print "===obs.status()==="
@@ -31,16 +31,17 @@ def main(options, args):
     #Create a new sb
     sb_id_code = obs.sb.new(owner=options.user)
     print "===NEW SB CREATED===", sb_id_code
-    obs.sb.description = "'%s'" % (options.description)
+    obs.sb.description = "%s" % (options.description)
     obs.sb.type = ScheduleBlockTypes.OBSERVATION
-    instruction_set = "run-obs-script /home/kat/katsdpscripts/AR1/observations/beamform_AR1.py --proposal-id='COMM-AR1' --program-block-id='COMM-173' -B %s -F 1284 '%s' -t %d --horizon 20" % (options.bandwidth, options.target, options.duration)
+    instruction_set = "run-obs-script /home/kat/usersnfs/ruby/fbf_integration/observations/beamform_AR1.py --proposal-id='COMM-AR1' --program-block-id='COMM-173' -B %s -F 1284 '%s' -t %d --horizon 20" % (options.bandwidth, options.target, options.duration)
+#     instruction_set = "run-obs-script /home/kat/katsdpscripts/AR1/observations/beamform_AR1.py --proposal-id='COMM-AR1' --program-block-id='COMM-173' -B %s -F 1284 '%s' -t %d --horizon 20" % (options.bandwidth, options.target, options.duration)
     if options.backend is not None:
         instruction_set += " --backend='%s'" % (options.backend)
     if options.backend_args is not None:
         instruction_set += " --backend-args='%s'" % (options.backend_args)
     if options.drift_scan:
         instruction_set += " --drift-scan"
-    obs.sb.instruction_set = "'%s'" % (instruction_set)
+    obs.sb.instruction_set = "%s" % (instruction_set)
     obs.sb.antenna_spec = options.antennas
     obs.sb.controlled_resources_spec = 'cbf,sdp'
     obs.sb.to_defined()
@@ -101,7 +102,7 @@ if __name__ == "__main__":
                       dest='backend',
                       type=str,
                       default=None,
-                      help='standard beamformer backends')
+                      help="standard beamformer backends, must always include '-t <sec> -p <1/4>' ")
     parser.add_option('--backend-args',
                       dest='backend_args',
                       type=str,
@@ -116,6 +117,13 @@ if __name__ == "__main__":
 # make backend a choice
     (options, args) = parser.parse_args()
 
+    print options
+    if options.backend_args is not None:
+        if ('-t' not in options.backend_args) or ('-p' not in options.backend_args):
+            print "Incompatable backend arguments: %s" % (options.backend_args)
+            print "Standard beamformer backends, must always include '-t <sec> -p <1/4>' "
+            raise SystemExit(parser.print_usage())
+
     if options.user is None:
         print "A obsever/user/owner name is needed for this script"
         raise SystemExit(parser.print_usage())
@@ -123,6 +131,15 @@ if __name__ == "__main__":
     if options.target is None:
         print "A target is needed for this script"
         raise SystemExit(parser.print_usage())
+
+    import string
+    if options.backend is not None:
+        if string.lower(options.backend) == 'dspsr':
+            print options.target
+            print string.lower(options.target[0])
+            if string.lower(options.target[0]) != 'j':
+                print("DSPSR backend requires 'J' naming convention for targets")
+                raise SystemExit()
 
     main(options, args)
 

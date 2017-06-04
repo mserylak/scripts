@@ -8,7 +8,11 @@ import logging
 APP_NAME = 'katscripts'
 
 calibrators = {
-               'PKS 0408-65':'PKS 0408-65 | J0408-6545, radec bfcal single_accumulation, 4:08:20.38, -65:45:09.1, (800.0 8400.0 -3.708 3.807 -0.7202)'
+               'PKS 0408-65':'PKS 0408-65 | J0408-6545, radec bfcal single_accumulation, 4:08:20.38, -65:45:09.1, (800.0 8400.0 -3.708 3.807 -0.7202)',
+               'PKS 1934-63':'PKS 1934-63 | J1939-6342, radec bfcal single_accumulation, 19:39:25.03, -63:42:45.7, (200.0 12000.0 -11.11 7.777 -1.231)',
+               '3C 286':'3C 286, radec bfcal single_accumulation, 13:31:08.29, +30:30:33.0, (1408.0 43200.0 0.956 0.584 -0.1644)',
+               '1421-490':'1421-490, radec bfcal single_accumulation, 14:24:32.28, -49:13:49.30, (145. 99000. 6.0550 -4.1963 1.1975)',
+
               }
 
 def main(options, args):
