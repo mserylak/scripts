@@ -25,10 +25,10 @@ __version__ = 1.0
 
 def getArchiveInfo(archive):
   '''Query archive attributes.
-    Input:
-      archive: loaded PSRCHIVE archive object.
-    Output:
-      Print attributes of the archive.
+     Input:
+       archive: loaded PSRCHIVE archive object.
+     Output:
+       Print attributes of the archive.
 '''
   fileName = archive.get_filename()
   nBin = archive.get_nbin()
@@ -85,14 +85,14 @@ def getArchiveInfo(archive):
   print 'be:delay         Backend propn delay from digi. input.      %s\n' % backendDelay
 
 def getZeroWeights(archive, psrsh, verbose = False):
-  '''Query the number of subint-channels with zeroed weights
-    (i.e. cleaned) in TimerArchive/PSRFITS file.
-       Input:
-         archive: loaded PSRCHIVE archive object.
-         psrsh: name of psrsh file
-         verbose: verbosity flag
-       Output:
-         Writes out psrsh file with zap commands.
+  '''Query the number of subint-channels with zeroed
+     weights (i.e. cleaned) in TimerArchive/PSRFITS file.
+     Input:
+       archive: loaded PSRCHIVE archive object.
+       psrsh: name of psrsh file
+       verbose: verbosity flag
+     Output:
+       Writes out psrsh file with zap commands.
 '''
   weights = archive.get_weights()
   (nSubint, nChan) = weights.shape
@@ -121,6 +121,32 @@ def getZeroWeights(archive, psrsh, verbose = False):
   if verbose:
     print '%s data points out of %s with weights set to zero.' % (counter, weights.size)
     print '%.2f%% data points set to zero.' % (totalPercent)
+
+#def replaceNth(string, source, target, position):
+#  '''Replace nth occurance of a substring in a string.
+#     TODO: add error rising.
+#     Input:
+#       string: string to search in.
+#       source: substring to replace.
+#       target: substring to replace with.
+#       position: nth occurrence of source to replace.
+#     Output:
+#       String with replaced substring.
+#'''
+#  indices = [i for i in range(len(string) - len(source) + 1) if string[i:i + len(source)] == source]
+#  if len(indices) < position:
+#    return  # or maybe raise an error
+#  string = list(string)  # can't assign to string slices. So, let's listify
+#  string[indices[position - 1]:indices[position - 1] + len(source)] = target # do n-1 because we start from the first occurrence of the string, not the 0-th
+#  return ''.join(string)
+
+def replaceNth(string, source, target, position):
+  indices = [i for i in range(len(string) - len(source) + 1) if string[i:i + len(source)] == source]
+  if len(indices) < position:
+      return  # or maybe raise an error
+  string = list(string)  # can't assign to string slices. So, let's listify
+  string[indices[position - 1]:indices[position - 1] + len(source)] = target  # do n-1 because we start from the first occurrence of the string, not the 0-th
+  return ''.join(string)
 
 # Main body of the script.
 if __name__ == '__main__':
@@ -158,7 +184,7 @@ if __name__ == '__main__':
     outputDir = args.inputDir
   else:
     if os.access(args.outputDir, os.F_OK):
-      pass
+      outputDir = args.outputDir
     else:
       print '\nOutput directory does not exist. Exiting script.\n'
       sys.exit(0)
@@ -200,14 +226,15 @@ if __name__ == '__main__':
     #print archives[i]
     archives[0].append(archives[i])
 
-  # Prepare new data object and set file name (PSR_DYYYYMMDDTHHMMSS.ar convention).
+  # Prepare new data object and set stem file name (PSR_DYYYYMMDDTHHMMSS convention).
   rawArchive = archives[0].clone()
-  stemFileName = rawArchive.get_source() + '_D' + os.path.split(rawArchive.get_filename())[-1].replace('-','').replace(':','')[:-3]
+  stemFileName = rawArchive.get_source() + '_D' + replaceNth(os.path.split(rawArchive.get_filename())[-1], '-', 'T', 3).replace('-','').replace(':','')[:-3]
 
-  # Update ephemeris.
+  # Update ephemeris and write out the file.
   if updateEphem:
     print '\nUpdating ephemeris in: %s\n' % rawArchive.get_filename()
     rawArchive.set_ephemeris(ephemFile)
+  rawArchive.unload(outputDir + '/' + stemFileName + '.ar')
 
   # Clean archive from RFI and save zap commands to psrsh file.
   cleaner = cleaners.load_cleaner('surgical')
@@ -216,11 +243,23 @@ if __name__ == '__main__':
   print '\nCleaning archive from RFI.\n'
   cleaner.run(rawArchive)
   if args.psrshSave:
-    psrshFilename = outputDir + '/' + stemFileName + '.psh'
+    psrshFilename = outputDir + '/' + stemFileName + '.ar.psh'
     #print psrshFilename
     getZeroWeights(rawArchive, psrshFilename)
-  print '\nSaving data to file %s\n' % (stemFileName + '.zap')
-  rawArchive.unload(outputDir + '/' + stemFileName + '.zap')
+  print '\nSaving data to file %s\n' % (stemFileName + '.ar.zap')
+  rawArchive.unload(outputDir + '/' + stemFileName + '.ar.zap')
+
+  # Prepare de-dispersed and freq. resolved average profile.
+  tscrunchArchive = rawArchive.clone()
+  tscrunchArchive.dedisperse()
+  tscrunchArchive.tscrunch()
+  tscrunchArchive.unload(outputDir + '/' + stemFileName + '.ar.zap.DT')
+  # Prepare de-dispersed and time resolved data.
+  rawArchive.dedisperse()
+  rawArchive.fscrunch()
+  rawArchive.unload(outputDir + '/' + stemFileName + '.ar.zap.DF')
+  rawArchive.tscrunch_to_nsub(6)
+  rawArchive.unload(outputDir + '/' + stemFileName + '.ar.zap.DF.T6')
 
   # End timing the script and output running time.
   scriptEndTime = time.time()
